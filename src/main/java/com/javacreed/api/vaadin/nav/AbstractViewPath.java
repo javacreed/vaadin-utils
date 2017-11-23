@@ -4,17 +4,21 @@ import com.vaadin.ui.UI;
 
 public class AbstractViewPath {
 
-    protected final ViewPathBuilder builder;
+  protected final ViewPathBuilder builder;
 
-    protected AbstractViewPath(final String name) {
-        builder = new ViewPathBuilder(name);
-    }
+  protected AbstractViewPath(final String name) {
+    builder = ViewPathBuilder.of(name);
+  }
 
-    public void navigate() {
-        UI.getCurrent().getNavigator().navigateTo(path());
-    }
+  protected AbstractViewPath(final ViewName name) {
+    builder = ViewPathBuilder.of(name);
+  }
 
-    public String path() {
-        return builder.path();
-    }
+  public void navigate() {
+    UI.getCurrent().getNavigator().navigateTo(path());
+  }
+
+  public String path() {
+    return builder.path();
+  }
 }

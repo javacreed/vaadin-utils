@@ -4,114 +4,64 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-import com.javacreed.api.vaadin.nav.ViewPathParameters.Parameter;
+import org.apache.commons.lang3.StringUtils;
 
-public class ViewPathParameters implements Iterable<Parameter> {
+public class ViewPathParameters implements Iterable<PartNameValue> {
 
-    public static class Parameter {
-        private final String name;
-        private final String value;
+  private static final ViewPathParameters EMPTY = new ViewPathParameters(Collections.emptyList());
 
-        public Parameter(final String name) {
-            this(name, null);
-        }
+  public static ViewPathParameters empty() {
+    return ViewPathParameters.EMPTY;
+  }
 
-        public Parameter(final String name, final String value) {
-            this.name = name;
-            this.value = value;
-        }
-
-        @Override
-        public boolean equals(final Object obj) {
-            if (this == obj) {
-                return true;
-            }
-            if (obj == null) {
-                return false;
-            }
-            if (getClass() != obj.getClass()) {
-                return false;
-            }
-            final Parameter other = (Parameter) obj;
-            if (name == null) {
-                if (other.name != null) {
-                    return false;
-                }
-            } else if (!name.equals(other.name)) {
-                return false;
-            }
-            if (value == null) {
-                if (other.value != null) {
-                    return false;
-                }
-            } else if (!value.equals(other.value)) {
-                return false;
-            }
-            return true;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public String getValue() {
-            return value;
-        }
-
-        @Override
-        public int hashCode() {
-            final int prime = 31;
-            int result = 1;
-            result = prime * result + (name == null ? 0 : name.hashCode());
-            result = prime * result + (value == null ? 0 : value.hashCode());
-            return result;
-        }
-
-        @Override
-        public String toString() {
-            return "Parameter [name=" + name + ", value=" + value + "]";
-        }
+  public static ViewPathParameters of(final String parameters) {
+    if (StringUtils.isBlank(parameters)) {
+      return ViewPathParameters.empty();
     }
 
-    public static ViewPathParameters parse(final String parameters) {
-        final List<Parameter> map = new ArrayList<>();
-
-        // TODO: add validations
-        final String[] parts = parameters.split("\\/");
-        for (final String part : parts) {
-            final String[] pair = part.split("\\|", 2);
-            map.add(pair.length == 2 ? new Parameter(pair[0], pair[1]) : new Parameter(pair[0]));
-        }
-
-        return new ViewPathParameters(Collections.unmodifiableList(map));
+    /* TODO: We need to be able to configure this separator */
+    final String[] parts = parameters.split("\\/");
+    final List<PartNameValue> list = new ArrayList<>(parts.length);
+    for (final String part : parts) {
+      /* TODO: We need to be able to configure this separator */
+      final String[] pair = part.split("\\|", 2);
+      final ParamName name = ParamName.of(pair[0]);
+      final ParamValue value = pair.length == 2 ? ParamValue.of(pair[1]) : null;
+      list.add(PartNameValue.ofNullable(name, value));
     }
 
-    private final List<Parameter> parameters;
+    return new ViewPathParameters(Collections.unmodifiableList(list));
+  }
 
-    private ViewPathParameters(final List<Parameter> parameters) throws NullPointerException {
-        this.parameters = Objects.requireNonNull(parameters);
-    }
+  private final List<PartNameValue> parameters;
 
-    @Override
-    public Iterator<Parameter> iterator() {
-        return parameters.iterator();
-    }
+  private ViewPathParameters(final List<PartNameValue> parameters) throws NullPointerException {
+    this.parameters = parameters;
+  }
 
-    public ViewPathParameters perform(final Predicate<String> predicate, final Consumer<Parameter> function) {
-        for (final Parameter p : this) {
-            if (predicate.test(p.getName())) {
-                function.accept(p);
-                break;
-            }
-        }
-        return this;
-    }
+  public boolean isEmpty() {
+    return parameters.isEmpty();
+  }
 
-    public ViewPathParameters perform(final String name, final Consumer<Parameter> function) {
-        return perform(p -> name.equalsIgnoreCase(p), function);
+  @Override
+  public Iterator<PartNameValue> iterator() {
+    return parameters.iterator();
+  }
+
+  public ViewPathParameters perform(final ParamName name, final Consumer<PartNameValue> function) {
+    return perform(p -> name.equalsIgnoreCase(p), function);
+  }
+
+  public ViewPathParameters perform(final Predicate<ParamName> predicate, final Consumer<PartNameValue> function) {
+    for (final PartNameValue p : this) {
+      if (predicate.test(p.getName())) {
+        function.accept(p);
+        break;
+      }
     }
+    return this;
+  }
 }

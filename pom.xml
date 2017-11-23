@@ -39,8 +39,8 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<vaadin.version>8.1.6</vaadin.version>
 		<commons.lang3.version>3.6</commons.lang3.version>
-		<guava.version>23.0</guava.version>
 		<junit.version>4.12</junit.version>
+		<javacreed.do.version>1.0.0</javacreed.do.version>
 	</properties>
 
 	<build>
@@ -145,9 +145,9 @@
 				<version>${commons.lang3.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>com.google.guava</groupId>
-				<artifactId>guava</artifactId>
-				<version>${guava.version}</version>
+				<groupId>com.javacreed.api</groupId>
+				<artifactId>domain-objects-api</artifactId>
+				<version>${javacreed.do.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>junit</groupId>
@@ -168,8 +168,8 @@
 			<artifactId>commons-lang3</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
+			<groupId>com.javacreed.api</groupId>
+			<artifactId>domain-objects-api</artifactId>
 		</dependency>
 
 		<dependency>

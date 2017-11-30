@@ -29,37 +29,43 @@ public class ViewPathBuilder {
     parameters = new TreeMap<>(StringBasedDomainObject.CASE_INSENSITIVE);
   }
 
-  public ViewPathBuilder param(final ParamName name) throws NullPointerException {
-    Preconditions.checkNotNull(name);
-    parameters.put(name, Optional.empty());
-    return this;
+  private <T extends ViewPathBuilder> T castTo() {
+    @SuppressWarnings("unchecked")
+    final T t = (T) this;
+    return t;
   }
 
-  public ViewPathBuilder param(final ParamName name, final ParamValue value)
+  public <T extends ViewPathBuilder> T param(final ParamName name) throws NullPointerException {
+    Preconditions.checkNotNull(name);
+    parameters.put(name, Optional.empty());
+    return castTo();
+  }
+
+  public <T extends ViewPathBuilder> T param(final ParamName name, final ParamValue value)
       throws NullPointerException, IllegalArgumentException {
     Preconditions.checkNotNull(name);
     Preconditions.checkNotNull(value);
     parameters.put(name, Optional.of(value));
-    return this;
+    return castTo();
   }
 
-  public ViewPathBuilder param(final String name) throws NullPointerException, IllegalArgumentException {
+  public <T extends ViewPathBuilder> T param(final String name) throws NullPointerException, IllegalArgumentException {
     return param(ParamName.of(name));
   }
 
-  public ViewPathBuilder param(final String name, final Number value)
+  public <T extends ViewPathBuilder> T param(final String name, final Number value)
       throws NullPointerException, IllegalArgumentException {
     return param(ParamName.of(name), ParamValue.of(value));
   }
 
-  public ViewPathBuilder param(final String name, final String value)
+  public <T extends ViewPathBuilder> T param(final String name, final String value)
       throws NullPointerException, IllegalArgumentException {
     return param(ParamName.of(name), ParamValue.of(value));
   }
 
-  public ViewPathBuilder partSeparator(final PartSeparator partSeparator) throws NullPointerException {
+  public <T extends ViewPathBuilder> T partSeparator(final PartSeparator partSeparator) throws NullPointerException {
     this.partSeparator = Preconditions.checkNotNull(partSeparator);
-    return this;
+    return castTo();
   }
 
   public String path() {
@@ -80,8 +86,8 @@ public class ViewPathBuilder {
     return path();
   }
 
-  public ViewPathBuilder valueSeparator(final ValueSeparator valueSeparator) throws NullPointerException {
+  public <T extends ViewPathBuilder> T valueSeparator(final ValueSeparator valueSeparator) throws NullPointerException {
     this.valueSeparator = Preconditions.checkNotNull(valueSeparator);
-    return this;
+    return castTo();
   }
 }

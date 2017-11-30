@@ -9,7 +9,34 @@ import java.util.function.Predicate;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.google.common.base.Preconditions;
+
 public class ViewPathParameters implements Iterable<PartNameValue> {
+
+  private static class Executable {
+    private static Executable of(final Predicate<PartNameValue> predicate, final Consumer<PartNameValue> consumer) {
+      Preconditions.checkNotNull(predicate);
+      Preconditions.checkNotNull(consumer);
+      return new Executable(predicate, consumer);
+    }
+
+    final Predicate<PartNameValue> predicate;
+
+    final Consumer<PartNameValue> consumer;
+
+    private Executable(final Predicate<PartNameValue> predicate, final Consumer<PartNameValue> consumer) {
+      this.predicate = predicate;
+      this.consumer = consumer;
+    }
+
+    public void accept(final PartNameValue part) {
+      consumer.accept(part);
+    }
+
+    public boolean test(final PartNameValue part) {
+      return predicate.test(part);
+    }
+  }
 
   private static final ViewPathParameters EMPTY = new ViewPathParameters(Collections.emptyList());
 
@@ -38,8 +65,14 @@ public class ViewPathParameters implements Iterable<PartNameValue> {
 
   private final List<PartNameValue> parameters;
 
+  private final List<Executable> executables = new ArrayList<>();
+
   private ViewPathParameters(final List<PartNameValue> parameters) throws NullPointerException {
     this.parameters = parameters;
+  }
+
+  public void end() {
+    orElse(() -> {});
   }
 
   public boolean isEmpty() {
@@ -51,17 +84,26 @@ public class ViewPathParameters implements Iterable<PartNameValue> {
     return parameters.iterator();
   }
 
-  public ViewPathParameters perform(final ParamName name, final Consumer<PartNameValue> function) {
-    return perform(p -> name.equalsIgnoreCase(p), function);
-  }
-
-  public ViewPathParameters perform(final Predicate<ParamName> predicate, final Consumer<PartNameValue> function) {
-    for (final PartNameValue p : this) {
-      if (predicate.test(p.getName())) {
-        function.accept(p);
-        break;
+  public void orElse(final Runnable runnable) {
+    for (final Executable e : executables) {
+      for (final PartNameValue p : this) {
+        if (e.test(p)) {
+          e.accept(p);
+          /* TODO: should we stop or process them all? */
+          return;
+        }
       }
     }
+
+    runnable.run();
+  }
+
+  public ViewPathParameters whenThen(final ParamName name, final Consumer<PartNameValue> function) {
+    return whenThen(p -> name.equalsIgnoreCase(p.getName()), function);
+  }
+
+  public ViewPathParameters whenThen(final Predicate<PartNameValue> predicate, final Consumer<PartNameValue> function) {
+    executables.add(Executable.of(predicate, function));
     return this;
   }
 }

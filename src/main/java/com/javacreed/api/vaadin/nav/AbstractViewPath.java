@@ -1,23 +1,18 @@
 package com.javacreed.api.vaadin.nav;
 
-import com.vaadin.ui.UI;
-
-public class AbstractViewPath {
+public class AbstractViewPath implements HasPath {
 
   protected final ViewPathBuilder builder;
 
   protected AbstractViewPath(final String name) {
-    builder = ViewPathBuilder.of(name);
+    this.builder = ViewPathBuilder.of(name);
   }
 
   protected AbstractViewPath(final ViewName name) {
-    builder = ViewPathBuilder.of(name);
+    this.builder = ViewPathBuilder.of(name);
   }
 
-  public void navigate() {
-    UI.getCurrent().getNavigator().navigateTo(path());
-  }
-
+  @Override
   public String path() {
     return builder.path();
   }

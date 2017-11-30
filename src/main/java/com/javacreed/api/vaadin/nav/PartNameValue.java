@@ -54,6 +54,10 @@ public class PartNameValue {
     return result;
   }
 
+  public boolean hasValue() {
+    return value.isPresent();
+  }
+
   @Override
   public String toString() {
     return "Parameter [name=" + name + ", value=" + value + "]";

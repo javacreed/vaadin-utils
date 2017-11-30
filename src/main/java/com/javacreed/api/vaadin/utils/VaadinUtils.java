@@ -11,8 +11,8 @@ public class VaadinUtils {
 
   public static void maybe(final String caption) {
     Notification.show(caption,
-        "This feature is not yet implemented because we are not sure whether it will be used or not.  If this is something that you really like to have, then please speak with your supervisor about this.",
-        Type.TRAY_NOTIFICATION);
+                      "This feature is not yet implemented because we are not sure whether it will be used or not.  If this is something that you really like to have, then please speak with your supervisor about this.",
+                      Type.TRAY_NOTIFICATION);
   }
 
   private VaadinUtils() {}

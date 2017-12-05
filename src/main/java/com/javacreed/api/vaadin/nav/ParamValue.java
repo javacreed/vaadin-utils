@@ -10,7 +10,7 @@ public class ParamValue extends PathPart {
    * TODO: These constraints are too restrictive and we will definitely need to relax them. For example, numbers may
    * include commas which are not supported by this pattern
    */
-  private static final Pattern REGEX = Pattern.compile("^[a-zA-Z0-9]{1,128}$");
+  private static final Pattern REGEX = Pattern.compile("^[a-zA-Z0-9\\-]{1,128}$");
 
   public static ParamValue of(final Number value) throws NullPointerException, IllegalArgumentException {
     Preconditions.checkNotNull(value);
@@ -21,7 +21,8 @@ public class ParamValue extends PathPart {
     Preconditions.checkNotNull(value);
     Preconditions.checkArgument(false == value.isEmpty());
     Preconditions.checkArgument(value.length() < 129);
-    Preconditions.checkArgument(ParamValue.REGEX.matcher(value).matches());
+    Preconditions.checkArgument(ParamValue.REGEX.matcher(value).matches(),
+        "Parameter value contains invalid characters");
     return new ParamValue(value);
   }
 

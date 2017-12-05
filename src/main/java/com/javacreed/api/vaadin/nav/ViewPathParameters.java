@@ -11,6 +11,14 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.google.common.base.Preconditions;
 
+/**
+ * TODO: The {@link #executables} field is modified every time the {@link #whenThen(ParamName, Consumer)} or
+ * {@link #whenThen(Predicate, Consumer)} methods are invoked. Consider returning a new instance of this class instead
+ * with the new {@link Executable} so that we can make this class immutable. Another option would be to freeze changes
+ * to this class once any of the terminating methods ({@link #orElse(Consumer)} or {@link #end()}) are invoked.
+ *
+ * @author Albert Attard
+ */
 public class ViewPathParameters implements Iterable<PartNameValue> {
 
   private static class Executable {
@@ -67,12 +75,12 @@ public class ViewPathParameters implements Iterable<PartNameValue> {
 
   private final List<Executable> executables = new ArrayList<>();
 
-  private ViewPathParameters(final List<PartNameValue> parameters) throws NullPointerException {
+  private ViewPathParameters(final List<PartNameValue> parameters) {
     this.parameters = parameters;
   }
 
   public void end() {
-    orElse(() -> {});
+    orElse(p -> {});
   }
 
   public boolean isEmpty() {
@@ -84,7 +92,7 @@ public class ViewPathParameters implements Iterable<PartNameValue> {
     return parameters.iterator();
   }
 
-  public void orElse(final Runnable runnable) {
+  public void orElse(final Consumer<ViewPathParameters> function) {
     for (final Executable e : executables) {
       for (final PartNameValue p : this) {
         if (e.test(p)) {
@@ -95,7 +103,7 @@ public class ViewPathParameters implements Iterable<PartNameValue> {
       }
     }
 
-    runnable.run();
+    function.accept(this);
   }
 
   public ViewPathParameters whenThen(final ParamName name, final Consumer<PartNameValue> function) {

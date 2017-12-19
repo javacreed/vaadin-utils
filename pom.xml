@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.javacreed.api</groupId>
 	<artifactId>vaadin-utils</artifactId>
-	<version>8.1.6</version>
+	<version>8.1.7</version>
 	<packaging>jar</packaging>
 	<name>Vaadin Utilities</name>
 	<description>This project provides utility classes related to the Vaadin Framework</description>
@@ -37,7 +37,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
-		<vaadin.version>8.1.6</vaadin.version>
+		<vaadin.version>8.1.7</vaadin.version>
 		<commons.lang3.version>3.6</commons.lang3.version>
 		<junit.version>4.12</junit.version>
 		<javacreed.do.version>1.0.0</javacreed.do.version>

@@ -13,8 +13,10 @@ public class ValidationUtils {
     textField.setComponentError(null);
     try {
       consumer.accept(textField.getValue());
-    } catch (NullPointerException | IllegalArgumentException ex) {
-      textField.setComponentError(new UserError(StringUtils.defaultIfBlank(ex.getMessage(), "Invalid input")));
+    } catch (NullPointerException | IllegalArgumentException e) {
+      textField.setComponentError(new UserError(StringUtils.defaultIfBlank(e.getMessage(), "Invalid input")));
+    } catch (final RuntimeException e) {
+      textField.setComponentError(new UserError("Failed to validate the input"));
     }
   }
 

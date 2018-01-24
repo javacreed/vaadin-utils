@@ -6,7 +6,7 @@ import java.util.Optional;
 import java.util.TreeMap;
 
 import com.google.common.base.Preconditions;
-import com.javacreed.api.domain.objects.mandatory.StringBasedDomainObject;
+import com.javacreed.api.domain.primitives.mandatory.StringBasedDomainObject;
 
 public class ViewPathBuilder {
 

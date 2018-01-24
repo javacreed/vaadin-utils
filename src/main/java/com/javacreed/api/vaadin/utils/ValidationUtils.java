@@ -5,6 +5,7 @@ import java.util.function.Consumer;
 import org.apache.commons.lang3.StringUtils;
 
 import com.vaadin.server.UserError;
+import com.vaadin.shared.Registration;
 import com.vaadin.ui.AbstractTextField;
 
 public class ValidationUtils {
@@ -20,12 +21,12 @@ public class ValidationUtils {
     }
   }
 
-  public static void onBlur(final AbstractTextField textField, final Consumer<String> consumer) {
-    textField.addBlurListener(e -> ValidationUtils.checkValue(textField, consumer));
+  public static Registration onBlur(final AbstractTextField textField, final Consumer<String> consumer) {
+    return textField.addBlurListener(e -> ValidationUtils.checkValue(textField, consumer));
   }
 
-  public static void onValueChange(final AbstractTextField textField, final Consumer<String> consumer) {
-    textField.addValueChangeListener(e -> ValidationUtils.checkValue(textField, consumer));
+  public static Registration onValueChange(final AbstractTextField textField, final Consumer<String> consumer) {
+    return textField.addValueChangeListener(e -> ValidationUtils.checkValue(textField, consumer));
   }
 
   private ValidationUtils() {}

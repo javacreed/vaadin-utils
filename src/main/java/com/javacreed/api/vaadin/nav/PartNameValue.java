@@ -1,5 +1,6 @@
 package com.javacreed.api.vaadin.nav;
 
+import java.util.Objects;
 import java.util.Optional;
 
 import javax.annotation.concurrent.Immutable;
@@ -29,12 +30,12 @@ public class PartNameValue {
       return true;
     }
 
-    if (object != null && getClass() == object.getClass()) {
-      final PartNameValue other = (PartNameValue) object;
-      return name.equals(other.name) && value.equals(other.value);
+    if (object == null || getClass() != object.getClass()) {
+      return false;
     }
 
-    return false;
+    final PartNameValue other = (PartNameValue) object;
+    return name.equals(other.name) && value.equals(other.value);
   }
 
   public ParamName getName() {
@@ -47,11 +48,7 @@ public class PartNameValue {
 
   @Override
   public int hashCode() {
-    final int prime = 31;
-    int result = 1;
-    result = prime * result + name.hashCode();
-    result = prime * result + value.hashCode();
-    return result;
+    return Objects.hash(name, value);
   }
 
   public boolean hasValue() {

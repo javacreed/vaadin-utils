@@ -22,7 +22,7 @@ public class ParamValue extends PathPart {
     Preconditions.checkArgument(false == value.isEmpty());
     Preconditions.checkArgument(value.length() < 129);
     Preconditions.checkArgument(ParamValue.REGEX.matcher(value).matches(),
-                                "Parameter value: '%s' contains invalid characters", value);
+        "Parameter value: '%s' contains invalid characters", value);
     return new ParamValue(value);
   }
 

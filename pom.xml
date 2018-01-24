@@ -146,7 +146,7 @@
 			</dependency>
 			<dependency>
 				<groupId>com.javacreed.api</groupId>
-				<artifactId>domain-objects-api</artifactId>
+				<artifactId>domain-primitives-api</artifactId>
 				<version>${javacreed.do.version}</version>
 			</dependency>
 			<dependency>
@@ -169,7 +169,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.javacreed.api</groupId>
-			<artifactId>domain-objects-api</artifactId>
+			<artifactId>domain-primitives-api</artifactId>
 		</dependency>
 
 		<dependency>

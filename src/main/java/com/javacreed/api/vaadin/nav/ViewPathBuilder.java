@@ -6,7 +6,7 @@ import java.util.Optional;
 import java.util.TreeMap;
 
 import com.google.common.base.Preconditions;
-import com.javacreed.api.domain.primitives.mandatory.StringBasedDomainObject;
+import com.javacreed.api.domain.primitives.mandatory.StringBasedDomainPrimitive;
 
 public class ViewPathBuilder {
 
@@ -26,7 +26,7 @@ public class ViewPathBuilder {
 
   private ViewPathBuilder(final ViewName name) {
     this.name = name;
-    parameters = new TreeMap<>(StringBasedDomainObject.CASE_INSENSITIVE);
+    parameters = new TreeMap<>(StringBasedDomainPrimitive.CASE_INSENSITIVE);
   }
 
   public ViewPathBuilder param(final ParamName name) throws NullPointerException {

@@ -2,7 +2,9 @@ package com.javacreed.api.vaadin.utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -16,15 +18,43 @@ import com.vaadin.ui.Component;
 
 public class ValidationUtils {
 
-  public static void checkValue(final AbstractTextField textField, final Consumer<String> consumer) {
+  public static <T> Optional<T> checkAndReturnValue(final AbstractTextField textField,
+      final Function<String, T> function) {
     textField.setComponentError(null);
     try {
-      consumer.accept(textField.getValue());
+      return Optional.of(function.apply(textField.getValue()));
     } catch (NullPointerException | IllegalArgumentException e) {
       textField.setComponentError(new UserError(StringUtils.defaultIfBlank(e.getMessage(), "Invalid input")));
     } catch (final RuntimeException e) {
       textField.setComponentError(new UserError("Failed to validate the input"));
     }
+
+    return Optional.empty();
+  }
+
+  public static boolean checkValue(final AbstractTextField textField, final Consumer<String> consumer) {
+    textField.setComponentError(null);
+    try {
+      consumer.accept(textField.getValue());
+      return true;
+    } catch (NullPointerException | IllegalArgumentException e) {
+      textField.setComponentError(new UserError(StringUtils.defaultIfBlank(e.getMessage(), "Invalid input")));
+    } catch (final RuntimeException e) {
+      textField.setComponentError(new UserError("Failed to validate the input"));
+    }
+
+    return false;
+  }
+
+  public static <T> Optional<T> checkValueAndGrab(final AbstractTextField textField,
+      final Function<String, T> function) {
+    final Optional<T> optional = ValidationUtils.checkAndReturnValue(textField, function);
+    if (false == optional.isPresent()) {
+      textField.selectAll();
+      textField.focus();
+    }
+
+    return optional;
   }
 
   public static List<ErrorMessage> getChildrenErrors(final AbstractLayout layout) {

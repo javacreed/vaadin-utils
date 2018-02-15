@@ -93,17 +93,26 @@ public class ViewPathParameters implements Iterable<PartNameValue> {
   }
 
   public void orElse(final Consumer<ViewPathParameters> function) {
-    for (final Executable e : executables) {
-      for (final PartNameValue p : this) {
-        if (e.test(p)) {
-          e.accept(p);
-          /* TODO: should we stop or process them all? */
-          return;
+    try {
+      for (final Executable e : executables) {
+        for (final PartNameValue p : this) {
+          if (e.test(p)) {
+            e.accept(p);
+            /* TODO: should we stop or process them all? */
+            return;
+          }
         }
       }
-    }
 
-    function.accept(this);
+      function.accept(this);
+    } finally {
+      executables.clear();
+    }
+  }
+
+  @Override
+  public String toString() {
+    return "ViewPathParameters [parameters=" + parameters + "]";
   }
 
   public ViewPathParameters whenThen(final ParamName name, final Consumer<PartNameValue> function) {

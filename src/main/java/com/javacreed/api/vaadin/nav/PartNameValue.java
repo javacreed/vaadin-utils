@@ -51,8 +51,16 @@ public class PartNameValue {
     return Objects.hash(name, value);
   }
 
+  public boolean hasName(final String name) {
+    return this.name.getValue().equals(name);
+  }
+
   public boolean hasValue() {
     return value.isPresent();
+  }
+
+  public boolean hasValueFor(final String name) {
+    return hasValue() && hasName(name);
   }
 
   @Override

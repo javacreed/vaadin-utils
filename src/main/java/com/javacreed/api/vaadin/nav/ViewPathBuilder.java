@@ -35,6 +35,11 @@ public class ViewPathBuilder {
     return this;
   }
 
+  public ViewPathBuilder param(final ParamName name, final Object value)
+      throws NullPointerException, IllegalArgumentException {
+    return param(name, value.toString());
+  }
+
   public ViewPathBuilder param(final ParamName name, final ParamValue value)
       throws NullPointerException, IllegalArgumentException {
     Preconditions.checkNotNull(name);

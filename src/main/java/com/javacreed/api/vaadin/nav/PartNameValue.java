@@ -1,5 +1,6 @@
 package com.javacreed.api.vaadin.nav;
 
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -12,8 +13,7 @@ public class PartNameValue {
 
   public static PartNameValue ofNullable(final ParamName name, final ParamValue value) {
     Preconditions.checkNotNull(name);
-    final Optional<ParamValue> optional = Optional.ofNullable(value);
-    return new PartNameValue(name, optional);
+    return new PartNameValue(name, Optional.ofNullable(value));
   }
 
   private final ParamName name;
@@ -40,6 +40,10 @@ public class PartNameValue {
 
   public ParamName getName() {
     return name;
+  }
+
+  public String getParamStringValue() throws NoSuchElementException {
+    return value.get().getValue();
   }
 
   public Optional<ParamValue> getValue() {
